@@ -4,7 +4,7 @@ const gameBoard = (function(){
     const board = ['','','','','','','','','']
     
     function reset(){
-        board.forEach((e)=> e = '') 
+        board.forEach((e,i)=> board[i] = '') 
     }
 
     function setMarker(marker,position){
@@ -55,37 +55,36 @@ function gameRunner(player1,player2){
     }
 
     function checkWin(){
-    const marker = currentPlayer().marker
+        const marker = currentPlayer().marker
 
-    // Check if ANY combination is a winner
-    return winningCombination.some((combination) => {
-        // Check if ALL elements in this combination match the marker
-        return combination.every((position) => {
-            return getMarker(position) === marker
+        // Check if ANY combination is a winner
+        return winningCombination.some((combination) => {
+             // Check if ALL elements in this combination match the marker
+            return combination.every((position) => {
+                return getMarker(position) === marker
         })
     })
-}
+        }
 
-function checkDraw(){
-    return ((round === 9) && !checkWin())
-}
+    function checkDraw(){
+        return ((round === 9) && !checkWin())
+    }
 
     function currentPlayer(){
         return round%2 === 0 ? player1 : player2 
     }
 
     function addRound(){
-        round++
+      round++
+        }
+
+    function makeMove(position){
+        if (!checkValidMove(position)) return false
+
+        setMarker(currentPlayer().marker , position)
+            return true
     }
 
-    function makeMove(position , player){
-        let validGame = true
-        if((!checkWin())){
-        checkValidMove(position) ? (setMarker(player.marker , position))  : validGame = false 
-        }
-        if (validGame){addRound()}
-        return validGame
-    }
 
 }
 
