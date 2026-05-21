@@ -4,7 +4,7 @@ const gameBoard = (function(){
     const board = ['','','','','','','','','']
     
     function reset(){
-        board.forEach((e)=>board[e] = '') 
+        board.forEach((e)=> e = '') 
     }
 
     function setMarker(marker,position){
@@ -47,16 +47,16 @@ const winningCombination = [
 ]
 
 function gameRunner(player1,player2){
-    let round = 0 //round is a singe player move so game have 9 rounds as the tictac grid 
+    let round = 0 //round is a singe player move so game have 9 rounds as the tictac grid so max round is 8
     const {reset,setMarker,getMarker} = gameBoard
 
     function checkValidMove(position){ //check if slot is free then return true
-        return getMarker(position) === ''
+        return getMarker(position) === '' 
     }
 
     function checkWin(){
     const marker = currentPlayer().marker
-    
+
     // Check if ANY combination is a winner
     return winningCombination.some((combination) => {
         // Check if ALL elements in this combination match the marker
@@ -64,6 +64,10 @@ function gameRunner(player1,player2){
             return getMarker(position) === marker
         })
     })
+}
+
+function checkDraw(){
+    return ((round === 9) && !checkWin())
 }
 
     function currentPlayer(){
@@ -74,23 +78,14 @@ function gameRunner(player1,player2){
         round++
     }
 
-    function makeMove(position){
+    function makeMove(position , player){
         let validGame = true
-        if (currentPlayer() === player1){
-            log(`Player1`)
-            checkValidMove(position) ? (setMarker(player1.marker , position)) : validGame = false ;
-        } else {
-            log(`player2`)
-            checkValidMove(position) ? (setMarker(player2.marker , position)) : validGame = false ;
+        if((!checkWin())){
+        checkValidMove(position) ? (setMarker(player.marker , position))  : validGame = false 
         }
         if (validGame){addRound()}
         return validGame
     }
-
-
-
-
-   
 
 }
 
