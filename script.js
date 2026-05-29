@@ -15,11 +15,15 @@ const gameBoard = (function(){
         return board[position]
     }
 
+    function getBoard(){
+        return board
+    }
 
     return{
         reset,
         setMarker,
         getMarker,
+        getBoard,
     }
 })()
 
@@ -90,6 +94,15 @@ function gameRunner(player1,player2){
             return true
     }
 
+    function printBoard(){
+        console.log(gameBoard.getBoard())
+    }
+
+    function reset(){
+        gameBoard.reset()
+        round = 0
+    }
+
     function playGame(position){
         if(!makeMove(position)){
             console.log('Invalid move try again')
@@ -103,12 +116,29 @@ function gameRunner(player1,player2){
             console.log(`Game over it's a draw`)
             return
         }
+        printBoard()
     }
+
+    function debug(){
+        console.log({
+            board: gameBoard.getBoard(),
+            round
+    })
+}   
     return{
-        playGame
+        playGame,
+        reset,
+        debug,
     }
 }
 
+const uiController =  (function(){
+    //Elements:
+    const cells = document.querySelector('[data-testid]')
+    
+})()
 ////////////////////
 const player2 = new Player('Bibi' , 'O')
 const player1 = new Player('Alex' , 'X')
+let game = gameRunner(player1,player2)
+
