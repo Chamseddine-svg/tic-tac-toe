@@ -91,9 +91,19 @@ function gameRunner(player1,player2){
     }
 
     function playGame(position){
-        
+        if(!makeMove(position)){
+            console.log('Invalid move try again')
+            return
+        }
+        if(checkWin()){
+            console.log(`Game over, ${previousPlayer().name} is winner`)
+            return
+        }
+        if(checkDraw()){
+            console.log(`Game over it's a draw`)
+            return
+        }
     }
-  
     return{
         playGame
     }
