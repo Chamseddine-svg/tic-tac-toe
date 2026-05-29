@@ -28,10 +28,10 @@ function Player(name,marker,score = 0){
     this.name = name
     this.marker = marker
     this.score = score
+}
 
-    this.changeName = function(name){
-        this.name = name
-    }
+Player.prototype.changeName = function(name){
+    this.name = name
 }
 
 //game runner
@@ -55,7 +55,7 @@ function gameRunner(player1,player2){
     }
 
     function checkWin(){
-        const marker = currentPlayer().marker
+        const marker = previousPlayer().marker
 
         // Check if ANY combination is a winner
         return winningCombination.some((combination) => {
@@ -74,6 +74,10 @@ function gameRunner(player1,player2){
         return round%2 === 0 ? player1 : player2 
     }
 
+    function previousPlayer(){
+    return round % 2 === 0 ? player2 : player1
+    }
+
     function addRound(){
       round++
         }
@@ -82,12 +86,18 @@ function gameRunner(player1,player2){
         if (!checkValidMove(position)) return false
 
         setMarker(currentPlayer().marker , position)
+        addRound()
             return true
     }
 
-
+    function playGame(position){
+        
+    }
+  
+    return{
+        playGame
+    }
 }
-
 
 ////////////////////
 const player2 = new Player('Bibi' , 'O')
