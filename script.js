@@ -129,13 +129,41 @@ function gameRunner(player1,player2){
         playGame,
         reset,
         debug,
+        checkDraw,
+        checkWin,
     }
 }
 
 const uiController =  (function(){
     //Elements:
-    const cells = document.querySelector('[data-testid]')
-    
+    const cells = document.querySelectorAll('[data-index]')
+    const statusElement = document.querySelector('[data-testid="status"]')
+    const resetButton = document.querySelector('[data-testid="reset-button"]')
+    const playerXNameInput = document.querySelector('[data-testid="input-player-x"]')
+    const playerONameInput = document.querySelector('[data-testid="input-player-o"]')
+    const playerXElement = document.querySelector('[data-testid="player-x"]')
+    const playerOElement = document.querySelector('[data-testid="player-o"]')
+    //imports:
+    const {getMarker} = gameBoard
+    const {checkDraw , checkWin} = gameRunner
+
+    function renderBoard(){
+        //imports:
+        const board = gameBoard.getBoard() //needed here whenever rendering 
+        cells.forEach((cell,index) =>{
+            cell.textContent(board[index])
+        }
+        )
+    }
+
+    function renderGameState(){
+        if(checkDraw){statusElement.textContent("Game Over It's a Draw")}
+        if(checkWin){statusElement.textContent("Game Over We Have a winner")}
+    }
+
+    return{
+        renderBoard,
+    }
 })()
 ////////////////////
 const player2 = new Player('Bibi' , 'O')
