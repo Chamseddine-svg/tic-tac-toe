@@ -132,10 +132,11 @@ function gameRunner(player1,player2){
         checkDraw,
         checkWin,
         currentPlayer,
+        checkValidMove,
     }
 }
 
-const uiController =  (function(){
+const uiController =  (function(game , gameBoard){
     //Elements:
     const cells = document.querySelectorAll('[data-index]')
     const statusElement = document.querySelector('[data-testid="status"]')
@@ -145,21 +146,21 @@ const uiController =  (function(){
     const playerXElement = document.querySelector('[data-testid="player-x"]')
     const playerOElement = document.querySelector('[data-testid="player-o"]')
     //imports:
-    const {getMarker} = gameBoard
-    const {checkValidMove ,checkDraw , checkWin , currentPlayer , playGame} = gameRunner
+    const {getMarker,getBoard} = gameBoard
+    const {checkValidMove ,checkDraw , checkWin , currentPlayer , playGame} = game
 
     function renderBoard(){
         //imports:
-        const board = gameBoard.getBoard() //needed here whenever rendering 
+        const board = getBoard() //needed here whenever rendering 
         cells.forEach((cell,index) =>{
-            cell.textContent(board[index])
+            cell.textContent = board[index]
         })
     }
 
     function renderGameState(){
-        if(checkDraw){statusElement.textContent("Game Over It's a Draw")}
-        if(checkWin){statusElement.textContent("Game Over We Have a winner")}
-        else statusElement.textContent("Game Running")
+        if(checkWin()) {statusElement.textContent = "Game Over We Have a winner"}
+        else if(checkDraw()){statusElement.textContent = "Game Over It's a Draw"}
+        else {statusElement.textContent = "Game Running"}
     }
 
     function highlightActivePlayerCase(){
@@ -178,16 +179,20 @@ const uiController =  (function(){
         cells.forEach((cell , index) =>{
             cell.addEventListener('click' , ()=>{
                 playGame(Number(cell.getAttribute('data-index')))
+                renderBoard()
+                renderGameState()
+                highlightActivePlayerCase()
             })
         })
     }
 
     return{
-        
+        getPLayerMoves,
     }
 })()
 ////////////////////
 const player2 = new Player('Bibi' , 'O')
 const player1 = new Player('Alex' , 'X')
 let game = gameRunner(player1,player2)
-
+let ui = uiController(game , gameBoard) // passing the dependency 'game' and 'gameBoard' to controller
+ui.getPLayerMoves() //starting function getPlayerMoves so it attach the event listeners
