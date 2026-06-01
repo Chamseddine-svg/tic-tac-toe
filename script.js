@@ -52,7 +52,7 @@ const winningCombination = [
 
 function gameRunner(player1,player2){
     let round = 0 //round is a singe player move so game have 9 rounds as the tictac grid so max round is 8
-    const {reset,setMarker,getMarker} = gameBoard
+    const {setMarker,getMarker} = gameBoard
 
     function checkValidMove(position){ //check if slot is free then return true
         return getMarker(position) === '' 
@@ -106,15 +106,15 @@ function gameRunner(player1,player2){
     function playGame(position){
         if(!makeMove(position)){
             console.log('Invalid move try again')
-            return
+            return false
         }
         if(checkWin()){
             console.log(`Game over, ${previousPlayer().name} is winner`)
-            return
+            return false
         }
         if(checkDraw()){
             console.log(`Game over it's a draw`)
-            return
+            return false
         }
         printBoard()
     }
@@ -131,6 +131,7 @@ function gameRunner(player1,player2){
         debug,
         checkDraw,
         checkWin,
+        currentPlayer,
     }
 }
 
@@ -145,24 +146,44 @@ const uiController =  (function(){
     const playerOElement = document.querySelector('[data-testid="player-o"]')
     //imports:
     const {getMarker} = gameBoard
-    const {checkDraw , checkWin} = gameRunner
+    const {checkValidMove ,checkDraw , checkWin , currentPlayer , playGame} = gameRunner
 
     function renderBoard(){
         //imports:
         const board = gameBoard.getBoard() //needed here whenever rendering 
         cells.forEach((cell,index) =>{
             cell.textContent(board[index])
-        }
-        )
+        })
     }
 
     function renderGameState(){
         if(checkDraw){statusElement.textContent("Game Over It's a Draw")}
         if(checkWin){statusElement.textContent("Game Over We Have a winner")}
+        else statusElement.textContent("Game Running")
+    }
+
+    function highlightActivePlayerCase(){
+        const playersElements = [playerOElement,playerXElement]
+        playersElements.forEach(playerElement =>{
+            playerElement.setAttribute('class' , 'player')
+        })
+        if(currentPlayer().marker === 'X'){
+            playerXElement.setAttribute('class' , 'player active')
+        }else{
+            playerOElement.setAttribute('class' , 'player active')
+        }
+    }
+
+    function getPLayerMoves(){
+        cells.forEach((cell , index) =>{
+            cell.addEventListener('click' , ()=>{
+                playGame(Number(cell.getAttribute('data-index')))
+            })
+        })
     }
 
     return{
-        renderBoard,
+        
     }
 })()
 ////////////////////
