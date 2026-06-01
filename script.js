@@ -51,19 +51,16 @@ const winningCombination = [
 ]
 
 function gameRunner(player1,player2){
-    let round = 0 //round is a singe player move so game have 9 rounds as the tictac grid so max round is 8
+    let round = 0
     const {setMarker,getMarker} = gameBoard
 
-    function checkValidMove(position){ //check if slot is free then return true
+    function checkValidMove(position){
         return getMarker(position) === '' 
     }
 
     function checkWin(){
         const marker = previousPlayer().marker
-
-        // Check if ANY combination is a winner
         return winningCombination.some((combination) => {
-             // Check if ALL elements in this combination match the marker
             return combination.every((position) => {
                 return getMarker(position) === marker
         })
@@ -88,7 +85,6 @@ function gameRunner(player1,player2){
 
     function makeMove(position){
         if (!checkValidMove(position)) return false
-
         setMarker(currentPlayer().marker , position)
         addRound()
             return true
@@ -136,7 +132,12 @@ function gameRunner(player1,player2){
     }
 }
 
-const uiController =  (function(game , gameBoard){
+////////////////////
+const player2 = new Player('Bibi' , 'O')
+const player1 = new Player('Alex' , 'X')
+let game = gameRunner(player1,player2)
+
+const uiController = (function(game , gameBoard){
     //Elements:
     const cells = document.querySelectorAll('[data-index]')
     const statusElement = document.querySelector('[data-testid="status"]')
@@ -150,8 +151,7 @@ const uiController =  (function(game , gameBoard){
     const {checkValidMove ,checkDraw , checkWin , currentPlayer , playGame} = game
 
     function renderBoard(){
-        //imports:
-        const board = getBoard() //needed here whenever rendering 
+        const board = getBoard()
         cells.forEach((cell,index) =>{
             cell.textContent = board[index]
         })
@@ -189,10 +189,6 @@ const uiController =  (function(game , gameBoard){
     return{
         getPLayerMoves,
     }
-})()
-////////////////////
-const player2 = new Player('Bibi' , 'O')
-const player1 = new Player('Alex' , 'X')
-let game = gameRunner(player1,player2)
-let ui = uiController(game , gameBoard) // passing the dependency 'game' and 'gameBoard' to controller
-ui.getPLayerMoves() //starting function getPlayerMoves so it attach the event listeners
+})(game , gameBoard)
+
+uiController.getPLayerMoves()
