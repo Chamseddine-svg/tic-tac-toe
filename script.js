@@ -135,10 +135,10 @@ function gameRunner(player1,player2){
 }
 
 ////////////////////
-const player2 = new Player('Bibi' , 'O')
-const player1 = new Player('Alex' , 'X')
+const player1 = new Player('player 1' , 'X')
+const player2 = new Player('player 2' , 'O')
 let game = gameRunner(player1,player2)
-
+////////////////////
 const uiController = (function(game , gameBoard){
     //Elements:
     const cells = document.querySelectorAll('[data-index]')
@@ -149,8 +149,8 @@ const uiController = (function(game , gameBoard){
     const playerXElement = document.querySelector('[data-testid="player-x"]')
     const playerOElement = document.querySelector('[data-testid="player-o"]')
     //imports:
-    const {getMarker,getBoard} = gameBoard
-    const {checkValidMove ,checkDraw , checkWin , previousPlayer, currentPlayer , playGame} = game
+    const {getMarker , getBoard , reset} = gameBoard
+    const {reset : resetGameRunner , checkValidMove , checkDraw , checkWin , previousPlayer, currentPlayer , playGame} = game
 
     function renderBoard(){
         const board = getBoard()
@@ -181,7 +181,6 @@ const uiController = (function(game , gameBoard){
         cells.forEach((cell , index) =>{
             cell.addEventListener('click' , ()=>{
                 if (checkDraw() || checkWin()){
-                    changePlayerName()
                     renderGameState()
                     renderBoard()
                     return
@@ -208,11 +207,22 @@ const uiController = (function(game , gameBoard){
             })
         })
     }
+
+    function uiResetButton(){
+        resetButton.addEventListener('click' , ()=> {
+            reset()
+            resetGameRunner()
+            renderBoard()
+        })
+    }
     return{
         makePlayerMoves,
         changePlayerName,
+        uiResetButton,
     }
 })(game , gameBoard)
 
+//calling functions attached to event listeners
 uiController.makePlayerMoves()
 uiController.changePlayerName()
+uiController.uiResetButton()
