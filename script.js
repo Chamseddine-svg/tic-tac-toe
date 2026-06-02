@@ -106,13 +106,14 @@ function gameRunner(player1,player2){
         }
         if(checkWin()){
             console.log(`Game over, ${previousPlayer().name} is winner`)
-            return false
+            return true
         }
         if(checkDraw()){
             console.log(`Game over it's a draw`)
-            return false
+            return true
         }
         printBoard()
+        return true
     }
 
     function debug(){
@@ -129,6 +130,7 @@ function gameRunner(player1,player2){
         checkWin,
         currentPlayer,
         checkValidMove,
+        previousPlayer,
     }
 }
 
@@ -148,7 +150,7 @@ const uiController = (function(game , gameBoard){
     const playerOElement = document.querySelector('[data-testid="player-o"]')
     //imports:
     const {getMarker,getBoard} = gameBoard
-    const {checkValidMove ,checkDraw , checkWin , currentPlayer , playGame} = game
+    const {checkValidMove ,checkDraw , checkWin , previousPlayer, currentPlayer , playGame} = game
 
     function renderBoard(){
         const board = getBoard()
@@ -158,7 +160,7 @@ const uiController = (function(game , gameBoard){
     }
 
     function renderGameState(){
-        if(checkWin()) {statusElement.textContent = "Game Over We Have a winner"}
+        if(checkWin()) {statusElement.textContent = `Game Over ${previousPlayer().name} is Winner`}
         else if(checkDraw()){statusElement.textContent = "Game Over It's a Draw"}
         else {statusElement.textContent = "Game Running"}
     }
@@ -175,20 +177,42 @@ const uiController = (function(game , gameBoard){
         }
     }
 
-    function getPLayerMoves(){
+    function makePlayerMoves(){
         cells.forEach((cell , index) =>{
             cell.addEventListener('click' , ()=>{
-                playGame(Number(cell.getAttribute('data-index')))
-                renderBoard()
-                renderGameState()
-                highlightActivePlayerCase()
+                if (checkDraw() || checkWin()){
+                    changePlayerName()
+                    renderGameState()
+                    renderBoard()
+                    return
+                }
+                const play = playGame(Number(cell.getAttribute('data-index')))
+                if (play){
+                    renderBoard()
+                    renderGameState()
+                    highlightActivePlayerCase()
+                }
             })
         })
     }
 
+    function changePlayerName(){
+        nameFields = [playerXNameInput , playerONameInput]
+        players = [player1 , player2]
+        nameFields.forEach((field , index) =>{
+            field.addEventListener('change' , ()=>{
+                const name = field.value.trim()
+                if (name){
+                    players[index].changeName(name)
+                }
+            })
+        })
+    }
     return{
-        getPLayerMoves,
+        makePlayerMoves,
+        changePlayerName,
     }
 })(game , gameBoard)
 
-uiController.getPLayerMoves()
+uiController.makePlayerMoves()
+uiController.changePlayerName()
