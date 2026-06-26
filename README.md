@@ -31,3 +31,14 @@ A classic Tic Tac Toe game built with vanilla JavaScript, HTML, and CSS. Play ag
 
 Or check live demo at :
 https://chamseddine-svg.github.io/tic-tac-toe/
+
+## QA Test Report & Bug Fixes
+While testing the game, I noticed a couple of issues with the blue highlight that shows whose turn it is:
+
+**#1 - Wrong player highlighted after a win**
+- When a player won, the blue border would move to the other player instead of staying on the winner.
+- **Fix:** Changed the logic to highlight the actual winner (the player who just moved), not the next player in line.
+
+**#2 - Highlight stayed active on a draw**
+- If the game ended in a tie, one player would still have the blue border even though nobody won.
+- **Fix:** Added a check so the highlight is removed from both players when the game is a draw.

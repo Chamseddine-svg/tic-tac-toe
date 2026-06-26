@@ -170,6 +170,23 @@ const uiController = (function(game , gameBoard){
         playersElements.forEach(playerElement =>{
             playerElement.setAttribute('class' , 'player')
         })
+        
+        //Check Draw and don't highlight any player
+        if(checkDraw()){ return }
+        
+        //Check Win and highlight winner player
+        //NB:winner is previous player since we are counting turns so even after a win the turn will add up and the active player will be next player even if games stops
+        if(checkWin()){
+            const winner = previousPlayer()
+            if(winner.marker === 'X'){
+                playerXElement.setAttribute('class' , 'player active')
+            }else{
+                playerOElement.setAttribute('class' , 'player active')
+            }
+            return
+        }
+
+        //Check active player while game running (not win and not draw)
         if(currentPlayer().marker === 'X'){
             playerXElement.setAttribute('class' , 'player active')
         }else{
@@ -213,6 +230,7 @@ const uiController = (function(game , gameBoard){
             reset()
             resetGameRunner()
             renderBoard()
+            highlightActivePlayerCase()
         })
     }
     return{
