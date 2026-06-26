@@ -213,8 +213,8 @@ const uiController = (function(game , gameBoard){
     }
 
     function changePlayerName(){
-        nameFields = [playerXNameInput , playerONameInput]
-        players = [player1 , player2]
+        const nameFields = [playerXNameInput , playerONameInput]
+        const players = [player1 , player2]
         nameFields.forEach((field , index) =>{
             field.addEventListener('change' , ()=>{
                 const name = field.value.trim()
