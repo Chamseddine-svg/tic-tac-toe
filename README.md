@@ -42,3 +42,7 @@ While testing the game, I noticed a couple of issues with the blue highlight tha
 **#2 - Highlight stayed active on a draw**
 - If the game ended in a tie, one player would still have the blue border even though nobody won.
 - **Fix:** Added a check so the highlight is removed from both players when the game is a draw.
+
+**#3 - Status text didn't update after reset**
+- After clicking Reset, the board would clear but the text would still say "Player X is Winner" or "It's a Draw."
+- **Fix:** Added `renderGameState()` to the reset function so the status text correctly changes back to "Game Running"

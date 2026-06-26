@@ -230,6 +230,7 @@ const uiController = (function(game , gameBoard){
             reset()
             resetGameRunner()
             renderBoard()
+            renderGameState()
             highlightActivePlayerCase()
         })
     }
